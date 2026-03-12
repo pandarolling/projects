@@ -1,5 +1,4 @@
-// hangman.cpp
-
+// wordle.cpp
 
 #include<iostream>
 #include <stdlib.h>
@@ -17,19 +16,24 @@ public:
 
 };
 
-class hangman: public words{
+class Wordle: public words{
 private:
 	string theWord;
 	string guess;
-	int wordlen;
 	bool completed;
 public:
-	hangman(){
+	Wordle(){
 		theWord = randomWord();
 		completed = false;
-		wordlen = theWord.length();
-		cout<<wordlen;
-		// guess(wordlen, '_')
+	}
+
+	void setNull(int pos){
+		guess.resize(100);
+		int i = 0;
+		while(i < pos){
+			guess[i++] = '_';
+		}
+		guess[i] ='\0';
 	}
 
 	string whatistheword(){
@@ -43,24 +47,36 @@ public:
 		int i = 0;
 		string ogWord = theWord;
 		int size = theWord.length();
-		string word(size, '_');
+		// string word(size, '_');
 		
-		char c;
+		int c;
 
-		while(word[i] != '\0' ){
-			if ( c = (guess[i] == ogWord[i])){
-				word[i] = c;
-			}else{
-				word[i] = '_';
+		while(guess[i] != '\0'){
+			if(guess[i] == '_'){
+				if ( paramtr[i] == ogWord[i]){
+				guess[i] = paramtr[i];
+				}
 			}
+			
 			i++;
 		}
 		
-		return word;
+		return guess;
 	}
 	bool wordcompleted(){
 		
 		return completed;
+	}
+
+	bool wordsCompare(){
+		
+		int i =0;
+		while(theWord[i] != '\0'){
+			if(theWord[i] != guess[i])
+				return false;
+			i++;
+		}
+		return true;
 	}
 };
 
@@ -77,34 +93,43 @@ vector<char> encase(string word){
 }
 int main(){
 	char ch;
-	cout<<"\nWelcome to the hangman game\n";
+	cout<<"\nWelcome to the Wordle game\n";
 	cout<<"\n****************************\n";
 
 	cout<<"Do you wish to play(y /n)";
 	cin>>ch;
 
-	while(ch == 'y'){
-		hangman hg;
-		int size = hg.wordlength(); 
+	while(ch == 'y' ){
+		Wordle wrdl;
+		int size = wrdl.wordlength(); 
+		wrdl.setNull(size);
 		string word(size,'_');
 		cout<<"the word length is "<<size<<endl;
 
 
-		vector <char> result  = encase(hg.returnafterchecking(word));
+		vector <char> result  = encase(wrdl.returnafterchecking(word));
 		string s(result.begin(), result.end());
 		cout << s;
 		
-		while(!hg.wordcompleted()){
-			cout<<"\nyou have "<< size<<" guesses\t";
+		while(!wrdl.wordcompleted() && size){
+			cout<<"\nyou have "<< size-- <<" guesses\t";
 			cout<<"\nEnter a word to guess:\t";
 			cin>>word;
 
-			result  = encase(hg.returnafterchecking(word));
+			result  = encase(wrdl.returnafterchecking(word));
 			string s(result.begin(), result.end());
-			cout << s;
-		}
+			cout <<endl << s;
 
-		
+			if(wrdl.wordsCompare()){
+
+				cout<<"Yay !!You won! The word was "<<wrdl.whatistheword()<<endl;
+				break;
+
+			}
+		}
+		cout<<"Do you wish to play again?(y /n)";
+		cin>>ch;
+
 	}
 
 	return 0;
