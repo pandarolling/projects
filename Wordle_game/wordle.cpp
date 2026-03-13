@@ -11,6 +11,7 @@ private:
 
 public:
 	string randomWord(){
+
 		return "games";
 	}
 
@@ -98,13 +99,14 @@ int main(){
 
 	cout<<"Do you wish to play(y /n)";
 	cin>>ch;
+	cout << "\n\n";
 
 	while(ch == 'y' ){
 		Wordle wrdl;
 		int size = wrdl.wordlength(); 
 		wrdl.setNull(size);
 		string word(size,'_');
-		cout<<"the word length is "<<size<<endl;
+		cout<<"Word length : "<<size<<endl<<endl;
 
 
 		vector <char> result  = encase(wrdl.returnafterchecking(word));
@@ -112,7 +114,7 @@ int main(){
 		cout << s;
 		
 		while(!wrdl.wordcompleted() && size){
-			cout<<"\nyou have "<< size-- <<" guesses\t";
+			cout<<"\n\nRemaining Guesses : "<< size-- <<"\t";
 			cout<<"\nEnter a word to guess:\t";
 			cin>>word;
 
@@ -125,6 +127,10 @@ int main(){
 				cout<<"Yay !!You won! The word was "<<wrdl.whatistheword()<<endl;
 				break;
 
+			}
+			if(!wrdl.wordcompleted() && !size){
+				cout<<"Better luck next time!\n";
+				cout<<"The word was " << wrdl.whatistheword()<<endl;
 			}
 		}
 		cout<<"Do you wish to play again?(y /n)";
